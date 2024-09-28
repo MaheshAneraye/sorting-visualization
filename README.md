@@ -3,15 +3,24 @@ This project is a web application that visualizes sorting algorithms using a gra
 
 Features
 Visualizes sorting algorithms: Bubble Sort and Insertion Sort.
+
 Allows users to set a minimum and maximum range for the values.
+
 Enables users to define the number of values to visualize.
+
 Supports both ascending and descending sorting orders.
+
 Responsive design for both desktop and mobile devices.
+
 Technologies Used
 Node.js: Server-side JavaScript runtime.
+
 Express: Web framework for Node.js.
+
 p5.js: Library for creative coding and visualizations.
+
 Docker: Containerization platform for easy deployment.
+
 Setup Instructions
 
 Clone the Repository
