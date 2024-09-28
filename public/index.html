@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Visualization</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Sorting Algorithm Visualization</h1>
+    </header>
+
+    <div class="controls">
+        <div class="inputs">
+            <div>
+                <label for="minRange">Min Range:</label>
+                <input type="number" id="minRange" value="10">
+            </div>
+            <div>
+                <label for="maxRange">Max Range:</label>
+                <input type="number" id="maxRange" value="400">
+            </div>
+            <div>
+                <label for="numValues">Number of Values:</label>
+                <input type="number" id="numValues" value="50">
+            </div>
+        </div>
+
+        <div class="dropdowns">
+            <div>
+                <label for="order">Order:</label>
+                <select id="order" onchange="setOrder()">
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+            <div>
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm" onchange="setAlgorithm()">
+                    <option value="bubbleSort">Bubble Sort</option>
+                    <option value="insertionSort">Insertion Sort</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="left-button" onclick="resetList()">Reset List</button>
+            <button class="right-button" onclick="startSorting()">Start Sorting</button>
+        </div>
+    </div>
+
+    <div id="visualization">
+        <!-- The p5.js canvas will be placed here -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

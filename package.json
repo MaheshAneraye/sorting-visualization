@@ -1,0 +1,20 @@
+{
+  "name": "sorting-visualization",
+  "version": "1.0.0",
+  "description": "A web application to visualize sorting algorithms using Node.js and p5.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "p5": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
