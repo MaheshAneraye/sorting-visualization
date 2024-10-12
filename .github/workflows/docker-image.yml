@@ -44,9 +44,11 @@ jobs:
     - name: Deploy to EC2
       env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOSTNAME: ${{secrets.EC2_IP}}
+          USER_NAME: ${{secrets.EC2_USER}}
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << 'EOF'
           echo "Pulling Docker image from Docker Hub..."
           docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
