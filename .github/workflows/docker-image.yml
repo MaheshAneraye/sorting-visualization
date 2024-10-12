@@ -43,7 +43,7 @@ jobs:
     # Deploy to EC2
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no -i /home/runner/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC@_SSH_KEY }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} << 'EOF'
           echo "Pulling Docker image from Docker Hub..."
           docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
