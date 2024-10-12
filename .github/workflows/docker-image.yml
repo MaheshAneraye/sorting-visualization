@@ -21,13 +21,21 @@ jobs:
       run: |
         echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
+    - name: Set image tag (timestamp-based)
+      id: vars
+      run: echo "::set-output name=image_tag::sorting-$(date +%s)"
+
     - name: Build the Docker image
       run: |
-        IMAGE_TAG=sorting-$(date +%s)
+        IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker build . --file Dockerfile --tag $IMAGE_TAG
+
+    - name: Tag the Docker image for Docker Hub
+      run: |
+        IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker tag $IMAGE_TAG ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_TAG:latest
 
     - name: Push the Docker image to Docker Hub
       run: |
-        IMAGE_TAG=sorting-$(date +%s)
+        IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_TAG:latest
