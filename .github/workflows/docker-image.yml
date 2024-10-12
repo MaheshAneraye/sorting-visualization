@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -40,25 +39,62 @@ jobs:
         IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_TAG:latest
 
-    # Deploy to EC2
-    - name: Deploy to EC2
-      env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOSTNAME: ${{secrets.EC2_IP}}
-          USER_NAME: ${{secrets.EC2_USER}}
+    # Deploy to Minikube
+    - name: Set up Minikube
+      uses: `manusa/actions-setup-minikube@v2.3.0`
+      with:
+        minikube_version: 'latest'
+        kubernetes_version: '1.20.2'  # Specify your desired version
+        driver: docker  # Use docker driver
+
+    - name: Deploy to Minikube
       run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << 'EOF'
-          echo "Pulling Docker image from Docker Hub..."
-          docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        # Set the image name with the latest tag
+        IMAGE_NAME=${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        
+        # Create deployment and service YAML files
+        echo "
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: sorting
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: sorting
+          template:
+            metadata:
+              labels:
+                app: sorting
+            spec:
+              containers:
+                - name: sorting
+                  image: $IMAGE_NAME
+                  ports:
+                    - containerPort: 3000
+        " > deployment.yaml
 
-          echo "Stopping and removing old container if exists..."
-          docker stop my-container || true && docker rm my-container || true
+        echo "
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: sorting-service
+        spec:
+          type: NodePort
+          selector:
+            app: sorting
+          ports:
+            - port: 3000
+              targetPort: 3000
+              nodePort: 30001
+        " > service.yaml
 
-          echo "Running the new container..."
-          docker run -d --name my-container -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
-        EOF
+        # Apply the deployment and service
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
 
-    - name: Retrieve EC2 Public IP
-      run: echo "Application is running at http://${{ secrets.EC2_IP }}"
+    - name: Get Minikube Service URL
+      run: |
+        echo "Application is running at:"
+        minikube service sorting-service --url
