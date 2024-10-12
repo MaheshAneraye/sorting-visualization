@@ -96,6 +96,10 @@ jobs:
       run: |
         echo "Getting deployment status:"
         kubectl get deployments
+
+        echo "Getting pod status:"
+        kubectl get pods
+        kubectl describe service sorting-service
         
         echo "Getting service status:"
         kubectl get services
