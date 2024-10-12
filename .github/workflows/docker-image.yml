@@ -41,7 +41,7 @@ jobs:
 
     # Deploy to Minikube
     - name: Set up Minikube
-      uses: `manusa/actions-setup-minikube@v2.3.0`
+      uses: manusa/actions-setup-minikube@v2.3.0
       with:
         minikube_version: 'latest'
         kubernetes_version: '1.20.2'  # Specify your desired version
