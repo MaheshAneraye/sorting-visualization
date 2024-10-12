@@ -60,5 +60,5 @@ jobs:
           docker run -d --name my-container -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
         EOF
 
-    # - name: Retrieve EC2 Public IP
-    #   run: echo "Application is running at http://${{ secrets.EC2_IP }}"
+    - name: Retrieve EC2 Public IP
+      run: echo "Application is running at http://${{ secrets.EC2_IP }}"
