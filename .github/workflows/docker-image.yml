@@ -91,6 +91,16 @@ jobs:
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
 
+    # Get services and deployments status
+    - name: Get Services and Deployments
+      run: |
+        echo "Getting deployment status:"
+        kubectl get deployments
+        
+        echo "Getting service status:"
+        kubectl get services
+
+    # Get Minikube Service URL
     - name: Get Minikube Service URL
       run: |
         echo "Application is running at:"
