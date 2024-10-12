@@ -21,9 +21,9 @@ jobs:
       run: |
         echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-    - name: Set image tag (timestamp-based)
+    - name: Set image tag (run number-based)
       id: vars
-      run: echo "::set-output name=image_tag::sorting-$(date +%s)"
+      run: echo "::set-output name=image_tag::sorting-${{ github.run_number }}"
 
     - name: Build the Docker image
       run: |
