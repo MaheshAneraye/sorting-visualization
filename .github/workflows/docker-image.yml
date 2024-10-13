@@ -55,7 +55,17 @@ jobs:
           echo "Deploying Docker service on Swarm Manager..."
           docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
           docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
-      # Verify that the service is running after deployment
+
+          # Provide the URL to access the cluster
+          echo "You can access the cluster at http://<your-cluster-url>:3000"
+
+    # Wait for 120 seconds for cleanup
+    # - name: Wait for cleanup
+    #   run: |
+    #     echo "Waiting for 120 seconds for cleanup..."
+    #     sleep 120
+
+    # Verify that the service is running after deployment
     - name: Verify Docker service status
       uses: appleboy/ssh-action@v0.1.3
       with:
