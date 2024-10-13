@@ -36,10 +36,6 @@ jobs:
       run: |
         IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker build . --file Dockerfile --tag $IMAGE_TAG
- # Run Trivy scan
-    - name: Run Trivy scan
-      run: |
-        trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
     # Tag the Docker image with the Docker Hub repository and push it to Docker Hub
     - name: Tag and Push Docker image to Docker Hub
@@ -47,6 +43,21 @@ jobs:
         IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker tag $IMAGE_TAG ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+
+    # Install Trivy
+    - name: Install Trivy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.35.0_Linux-64bit.tar.gz
+        tar zxvf trivy_0.35.0_Linux-64bit.tar.gz
+        sudo mv trivy /usr/local/bin/
+        trivy --version # To verify installation
+
+    # Run Trivy scan
+    - name: Run Trivy scan
+      run: |
+        trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
     # SSH into Swarm Manager and Deploy the service on Docker Swarm
     - name: SSH into Swarm Manager and Deploy
