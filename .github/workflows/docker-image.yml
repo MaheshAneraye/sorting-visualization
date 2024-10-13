@@ -92,8 +92,7 @@ jobs:
         kubectl apply -f service.yaml
 
     - name: Wait for 1 minute
-      run: sleep 30
-
+      run: sleep 60
 
     # Get services and deployments status
     - name: Get Services and Deployments
@@ -108,12 +107,14 @@ jobs:
         echo "Getting service status:"
         kubectl get services
 
-    # Get Minikube Service URL
-    - name: Get Minikube Service URL
+    # Use port forwarding to access the service from the GitHub Actions runner
+    - name: Forward port to access service
       run: |
-        echo "Application is running at:"
-        minikube service sorting-service --url
-        minikube ip
-        echo "minikube status"
-        minikube status
-        
+        echo "Forwarding port to access the service..."
+        kubectl port-forward service/sorting-service 3000:3000 &
+        sleep 10
+
+    # Get Minikube Service URL
+    - name: Test the application
+      run: |
+        curl http://localhost:3000
