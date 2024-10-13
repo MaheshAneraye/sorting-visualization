@@ -91,8 +91,8 @@ jobs:
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
 
-    - name: Wait for 1 minute
-      run: sleep 60
+    - name: Wait for 2 minutes
+      run: sleep 120
 
     # Get services and deployments status
     - name: Get Services and Deployments
@@ -107,14 +107,20 @@ jobs:
         echo "Getting service status:"
         kubectl get services
 
-    # Use port forwarding to access the service from the GitHub Actions runner
-    - name: Forward port to access service
+    # Get Minikube IP and NodePort for external access
+    - name: Get Minikube Service URL
       run: |
-        echo "Forwarding port to access the service..."
-        kubectl port-forward service/sorting-service 3000:3000 &
-        sleep 10
+        echo "Retrieving Minikube IP..."
+        MINIKUBE_IP=$(minikube ip)
+        echo "Application should be accessible at: http://$MINIKUBE_IP:30001"
 
-    # Get Minikube Service URL
-    - name: Test the application
+    - name: Wait for 2 minutes
+      run: sleep 120
+
+    # Cleanup Resources
+    - name: Clean up deployment and services
       run: |
-        curl http://localhost:3000
+        echo "Cleaning up resources..."
+        kubectl delete -f deployment.yaml
+        kubectl delete -f service.yaml
+    
