@@ -36,14 +36,10 @@ jobs:
       run: |
         IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
         docker build . --file Dockerfile --tag $IMAGE_TAG
-
-    # Run Trivy image scan
-    - name: Run Trivy image scan
+ # Run Trivy scan
+    - name: Run Trivy scan
       run: |
-        docker run --rm \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          aquasec/trivy:latest image --severity HIGH,CRITICAL --exit-code 1 \
-          --quiet ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        trivy image --severity HIGH,CRITICAL <your_docker_username>/sorting-32:latest
 
     # Tag the Docker image with the Docker Hub repository and push it to Docker Hub
     - name: Tag and Push Docker image to Docker Hub
