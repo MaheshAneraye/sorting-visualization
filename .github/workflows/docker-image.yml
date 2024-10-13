@@ -116,5 +116,4 @@ jobs:
         minikube ip
         echo "minikube status"
         minikube status
-        echo "port-forward"
-        kubectl port-forward svc/sorting-service 3000:3000
+        
