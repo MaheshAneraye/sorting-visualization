@@ -39,7 +39,7 @@ jobs:
  # Run Trivy scan
     - name: Run Trivy scan
       run: |
-        trivy image --severity HIGH,CRITICAL <your_docker_username>/sorting-32:latest
+        trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
     # Tag the Docker image with the Docker Hub repository and push it to Docker Hub
     - name: Tag and Push Docker image to Docker Hub
