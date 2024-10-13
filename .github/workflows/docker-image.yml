@@ -46,7 +46,7 @@ jobs:
 
     # SSH into Swarm Manager and Deploy the service on Docker Swarm
     - name: SSH into Swarm Manager and Deploy
-      uses: appleboy/ssh-action@v0.1.3
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SWARM_MANAGER_IP }}
         username: ${{ secrets.SSH_USERNAME }}
@@ -55,8 +55,7 @@ jobs:
           echo "Deploying Docker service on Swarm Manager..."
           docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
           docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
-
-    # Verify that the service is running after deployment
+      # Verify that the service is running after deployment
     - name: Verify Docker service status
       uses: appleboy/ssh-action@v0.1.3
       with:
