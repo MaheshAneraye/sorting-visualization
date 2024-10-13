@@ -42,4 +42,4 @@ Input your desired minimum and maximum range for the values.
 Define the number of values to visualize.
 Choose the sorting algorithm (Bubble Sort or Insertion Sort) and the order (ascending or descending).
 Click the "Start Sorting" button to begin the visualization.
-###
+
