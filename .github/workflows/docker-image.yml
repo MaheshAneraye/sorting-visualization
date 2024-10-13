@@ -67,7 +67,7 @@ jobs:
 
     # Verify that the service is running after deployment
     - name: Verify Docker service status
-      uses: appleboy/ssh-action@v0.1.3
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SWARM_MANAGER_IP }}
         username: ${{ secrets.SSH_USERNAME }}
