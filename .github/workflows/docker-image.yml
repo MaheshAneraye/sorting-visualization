@@ -55,9 +55,8 @@ jobs:
         trivy --version # To verify installation
         
     # Update Trivy and its vulnerability database
-    - name: Update Trivy and Database
+    - name: Update Database
       run: |
-        sudo apt update && sudo apt upgrade -y trivy
         trivy --download-db-only
 
     # Run Trivy scan
