@@ -27,6 +27,10 @@ jobs:
     - name: Run npm audit
       run: npm audit --audit-level=high || echo "npm audit found vulnerabilities, but continuing the build"
 
+    # Run npm audit fix to automatically fix vulnerabilities
+    - name: Run npm audit fix
+      run: npm audit fix
+
 
     # Install OWASP Dependency-Check
     # - name: Install OWASP Dependency-Check
