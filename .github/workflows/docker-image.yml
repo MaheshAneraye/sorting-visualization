@@ -24,9 +24,7 @@ jobs:
     - name: Run OWASP Dependency-Check
       run: |
         dependency-check --project "Sorting Visualization" --scan . --out ./dependency-check-report
-        echo "Dependency Check Report:"
-        cat ./dependency-check-report/dependency-check-report.txt
-
+        cat ./dependency-check-report/dependency-check-report.html
     # Install SonarQube Scanner
     - name: Install SonarQube Scanner
       run: |
