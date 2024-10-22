@@ -13,6 +13,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Install Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # Install project dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Run npm audit to check for vulnerabilities
+    - name: Run npm audit
+      run: npm audit --audit-level=high || echo "npm audit found vulnerabilities, but continuing the build"
+
 
     # Install OWASP Dependency-Check
     # - name: Install OWASP Dependency-Check
