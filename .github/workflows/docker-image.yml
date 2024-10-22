@@ -23,6 +23,10 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    # Update project dependencies
+    - name: Update dependencies
+      run: npm update
+
     # Run npm audit to check for vulnerabilities
     - name: Run npm audit
       run: npm audit --audit-level=high || echo "npm audit found vulnerabilities, but continuing the build"
