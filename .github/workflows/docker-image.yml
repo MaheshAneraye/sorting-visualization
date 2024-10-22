@@ -33,7 +33,12 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      with:
+        args: |
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+          -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+          -Dsonar.sources=. \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     
     # Set up Docker Buildx for building multi-platform images (optional, but recommended)
     - name: Set up Docker Buildx
