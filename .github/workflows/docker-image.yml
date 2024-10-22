@@ -27,25 +27,11 @@ jobs:
     #     cat report.html
     #     rm -rf dependency-check*
     
-    # Install SonarQube Scanner
-    - name: Install SonarQube Scanner
-      run: |
-        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-4.7.0.2740-linux.zip
-        unzip sonar-scanner-4.7.0.2740-linux.zip
-        sudo mv sonar-scanner-4.7.0.2740-linux /usr/local/sonar-scanner
-        echo "export PATH=\$PATH:/usr/local/sonar-scanner/bin" >> $GITHUB_ENV
-
-    # Run SonarQube Analysis
-    - name: Run SonarQube Analysis
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      run: |
-        sonar-scanner \
-          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     
     # Set up Docker Buildx for building multi-platform images (optional, but recommended)
     - name: Set up Docker Buildx
