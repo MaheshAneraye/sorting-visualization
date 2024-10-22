@@ -1,4 +1,4 @@
-#### Sorting Visualization
+# Sorting Visualization
 
 Welcome to the Sorting Visualization project! This is a simple web application built with Node.js that visualizes various sorting algorithms. The primary focus of this repository is the CI/CD pipeline implemented using GitHub Actions, which automates the build, scan, and deployment processes.
 
@@ -83,24 +83,24 @@ The infrastructure for this project is managed using Terraform and Ansible, whic
 ## Getting Started
 To get a local copy of this project up and running, follow these simple steps:
 
-# Clone the repository:
+### Clone the repository:
 
-git clone https://github.com/YOUR_USERNAME/sorting-visualization.git
+git clone https://github.com/MaheshAneraye/sorting-visualization.git
 cd sorting-visualization
 
-# Install dependencies:
+### Install dependencies:
 
 npm install
 
-# Run the application:
+### Run the application:
 
 npm start
 
 Open your browser and navigate to http://localhost:3000 to view the app.
 
-# Contributing
+### Contributing
 Contributions are welcome! If you have suggestions for improvements or want to report issues, feel free to open an issue or submit a pull request.
 
-# License
+### License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
