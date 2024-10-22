@@ -60,34 +60,25 @@ jobs:
       run: |
         trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
-    # SSH into Swarm Manager and Deploy the service on Docker Swarm
-    - name: SSH into Swarm Manager and Deploy
-      uses: appleboy/ssh-action@master
+    # Start the SSH agent and add the SSH private key
+    - name: Start SSH Agent
+      uses: webfactory/ssh-agent@v0.9.0
       with:
-        host: ${{ secrets.SWARM_MANAGER_IP }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          echo "Deploying Docker service on Swarm Manager..."
-          docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
-          docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Provide the URL to access the cluster
-          echo "You can access the cluster at http://<your-cluster-url>:3000"
-
-    # Wait for 120 seconds for cleanup
-    # - name: Wait for cleanup
-    #   run: |
-    #     echo "Waiting for 120 seconds for cleanup..."
-    #     sleep 120
+    # SSH into Swarm Manager and Deploy the service on Docker Swarm
+    - name: Deploy Docker service on Swarm Manager
+      run: |
+        echo "Deploying Docker service on Swarm Manager..."
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
+        "docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
+         docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest"
+        echo "You can access the cluster at http://<your-cluster-url>:3000"
 
     # Verify that the service is running after deployment
     - name: Verify Docker service status
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SWARM_MANAGER_IP }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          echo "Checking the status of the Docker service..."
-          docker service ls
+      run: |
+        echo "Checking the status of the Docker service..."
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
+        "docker service ls"
+
