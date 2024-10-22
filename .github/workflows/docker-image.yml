@@ -23,7 +23,7 @@ jobs:
     # Run OWASP Dependency-Check
     - name: Run OWASP Dependency-Check
       run: |
-        ./dependency-check/bin/dependency-check.sh --out report.html --scan .
+        ./dependency-check/bin/dependency-check.sh --out report.html --scan . --nvd-api-key=${{ secrets.NVD_API_KEY }}
         cat report.html
         rm -rf dependency-check*
     # Install SonarQube Scanner
