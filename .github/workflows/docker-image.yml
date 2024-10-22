@@ -27,11 +27,13 @@ jobs:
     #     cat report.html
     #     rm -rf dependency-check*
     
+    # Sonar analysis
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
     
     # Set up Docker Buildx for building multi-platform images (optional, but recommended)
     - name: Set up Docker Buildx
