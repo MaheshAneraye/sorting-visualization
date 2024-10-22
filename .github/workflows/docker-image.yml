@@ -57,7 +57,7 @@ jobs:
     # Run Trivy scan
     - name: Run Trivy scan
       run: |
-        trivy image --severity HIGH,CRITICAL --skip-db-update ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
     # Start the SSH agent and add the SSH private key
     - name: Start SSH Agent
