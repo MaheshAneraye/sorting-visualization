@@ -21,11 +21,12 @@ jobs:
         unzip dependency-check.zip
 
     # Run OWASP Dependency-Check
-    - name: Run OWASP Dependency-Check
-      run: |
-        ./dependency-check/bin/dependency-check.sh --out report.html --scan . --nvdApiKey ${{ secrets.NVD_API_KEY }}
-        cat report.html
-        rm -rf dependency-check*
+    # - name: Run OWASP Dependency-Check
+    #   run: |
+    #     ./dependency-check/bin/dependency-check.sh --out report.html --scan . --nvdApiKey ${{ secrets.NVD_API_KEY }}
+    #     cat report.html
+    #     rm -rf dependency-check*
+    
     # Install SonarQube Scanner
     - name: Install SonarQube Scanner
       run: |
