@@ -75,5 +75,5 @@ jobs:
       run: |
         echo "Checking the status of the Docker service..."
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
-        "docker service ls"
+        "sudo docker service ls"
 
