@@ -66,8 +66,8 @@ jobs:
       run: |
         echo "Deploying Docker service on Swarm Manager..."
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
-        "docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
-         docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest"
+        "sudo docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
+         sudo docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest"
         echo "You can access the cluster at http://<your-cluster-url>:3000"
 
     # Verify that the service is running after deployment
