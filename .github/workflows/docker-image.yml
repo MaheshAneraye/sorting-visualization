@@ -14,11 +14,11 @@ jobs:
       uses: actions/checkout@v4
 
     # Install OWASP Dependency-Check
-    - name: Install OWASP Dependency-Check
-      run: |
-        VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
-        curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
-        unzip dependency-check.zip
+    # - name: Install OWASP Dependency-Check
+    #   run: |
+    #     VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
+    #     curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
+    #     unzip dependency-check.zip
 
     # Run OWASP Dependency-Check
     # - name: Run OWASP Dependency-Check
@@ -33,12 +33,6 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      with:
-        args: |
-          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-          -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-          -Dsonar.sources=. \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     
     # Set up Docker Buildx for building multi-platform images (optional, but recommended)
     - name: Set up Docker Buildx
