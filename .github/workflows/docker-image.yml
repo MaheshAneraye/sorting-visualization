@@ -53,7 +53,12 @@ jobs:
         tar zxvf trivy_0.56.2_Linux-64bit.tar.gz
         sudo mv trivy /usr/local/bin/
         trivy --version # To verify installation
-
+        
+    # Update Trivy and its vulnerability database
+    - name: Update Trivy and Database
+      run: |
+        sudo apt update && sudo apt upgrade -y trivy
+        trivy --download-db-only
 
     # Run Trivy scan
     - name: Run Trivy scan
