@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:14 AS builder
+FROM node:latest-alpine AS builder
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -16,7 +16,7 @@ COPY . .
 # RUN npm run build  # Uncomment if you have a build step
 
 # Stage 2: Run
-FROM node:14
+FROM node:latest-alpine
 
 # Set the working directory for the final image
 WORKDIR /usr/src/app
