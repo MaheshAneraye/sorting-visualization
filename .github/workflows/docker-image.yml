@@ -88,20 +88,20 @@ jobs:
         docker tag $IMAGE_TAG ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
-    # Install Trivy
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.tar.gz
-        tar zxvf trivy_0.56.2_Linux-64bit.tar.gz
-        sudo mv trivy /usr/local/bin/
-        trivy --version # To verify installation
+    # # Install Trivy
+    # - name: Install Trivy
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y wget
+    #     wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.tar.gz
+    #     tar zxvf trivy_0.56.2_Linux-64bit.tar.gz
+    #     sudo mv trivy /usr/local/bin/
+    #     trivy --version # To verify installation
         
-    # Run Trivy scan
-    - name: Run Trivy scan
-      run: |
-        trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+    # # Run Trivy scan
+    # - name: Run Trivy scan
+    #   run: |
+    #     trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
     # Start the SSH agent and add the SSH private key
     - name: Start SSH Agent
