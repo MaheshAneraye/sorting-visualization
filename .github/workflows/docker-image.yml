@@ -59,7 +59,7 @@ jobs:
     # Set a unique image tag using GitHub Actions run number
     - name: Set image tag (run number-based)
       id: vars
-      run: echo "::set-output name=image_tag::sorting-${{ github.run_number }}"
+      run: echo "image_tag=sorting-${{ github.run_number }}" >> $GITHUB_ENV
 
     # Build the Docker image
     - name: Build the Docker image
