@@ -39,20 +39,6 @@ jobs:
     # Run npm audit again to report remaining vulnerabilities
     - name: Run npm audit after fix
       run: npm audit --audit-level=high || echo "Vulnerabilities remain, manual intervention required"
-
-    # Install OWASP Dependency-Check
-    # - name: Install OWASP Dependency-Check
-    #   run: |
-    #     VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
-    #     curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
-    #     unzip dependency-check.zip
-
-    # Run OWASP Dependency-Check
-    # - name: Run OWASP Dependency-Check
-    #   run: |
-    #     ./dependency-check/bin/dependency-check.sh --out report.html --scan . --nvdApiKey ${{ secrets.NVD_API_KEY }}
-    #     cat report.html
-    #     rm -rf dependency-check*
     
     # Sonar analysis
     - name: SonarQube Scan
