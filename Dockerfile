@@ -13,7 +13,7 @@ RUN npm install
 # Copy the rest of application code
 COPY . .
 
-# RUN npm run build  
+# RUN npm run build .
 
 # Stage 2: Run
 FROM node:18-alpine
