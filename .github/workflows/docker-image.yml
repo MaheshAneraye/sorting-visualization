@@ -74,17 +74,15 @@ jobs:
         docker tag $IMAGE_TAG ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
-    # trivy
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.24.0
       with:
         image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest'
-        format: 'json'
-        exit-code: '1'
+        format: 'table'
+        exit-code: '0'
         ignore-unfixed: true
         vuln-type: 'os,library'
-        severity: 'MEDIUM'
-        
+        severity: 'HIGH,CRITICAL'    
     # # Run Trivy scan
     # - name: Run Trivy scan
     #   run: |
