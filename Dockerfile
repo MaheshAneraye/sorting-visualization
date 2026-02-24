@@ -10,10 +10,10 @@ COPY package*.json ./
 # Install dependencies (including dev dependencies)
 RUN npm install
 
-# Copy the rest of your application code
+# Copy the rest of application code
 COPY . .
 
-# RUN npm run build  # Uncomment if you have a build step
+# RUN npm run build  
 
 # Stage 2: Run
 FROM node:18-alpine
@@ -27,5 +27,5 @@ COPY --from=builder /usr/src/app .
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Command to run your application
+# Command to run application
 CMD ["npm", "start"]
