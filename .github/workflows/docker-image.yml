@@ -3,110 +3,98 @@ name: Docker Image CI and Deploy
 on:
   push:
     branches:
-       - test
+      - test
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository code
+    # Checkout code
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Install Node.js
+    # Setup Node.js
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
 
-    # Install project dependencies
+    # Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Update project dependencies
+    # Update dependencies
     - name: Update dependencies
       run: npm update
 
-    # Run npm audit to check for vulnerabilities
+    # Audit vulnerabilities (non-blocking)
     - name: Run npm audit
-      run: npm audit --audit-level=high || echo "npm audit found vulnerabilities, but continuing the build"
+      run: npm audit --audit-level=high || echo "Audit found issues, continuing"
 
-    # Attempt to fix vulnerabilities automatically
+    # Attempt auto-fix
     - name: Run npm audit fix
-      run: |
-        npm audit fix --force || echo "Some vulnerabilities couldn't be fixed automatically, continuing the build"
+      run: npm audit fix --force || echo "Auto-fix incomplete"
 
-    # Run npm audit again to report remaining vulnerabilities
+    # Re-check vulnerabilities
     - name: Run npm audit after fix
-      run: npm audit --audit-level=high || echo "Vulnerabilities remain, manual intervention required"
-    
-    # Sonar analysis
+      run: npm audit --audit-level=high || echo "Manual fixes may be required"
+
+    # SonarQube Scan (PINNED VERSION)
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
+      uses: sonarsource/sonarqube-scan-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-    
-    # Set up Docker Buildx for building multi-platform images (optional, but recommended)
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
 
-    # Log in to Docker Hub
+    # Setup Docker Buildx
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Login to Docker Hub
     - name: Log in to Docker Hub
       run: |
         echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-    # Set a unique image tag using GitHub Actions run number
-    - name: Set image tag (run number-based)
-      id: set_image_tag
-      run: echo "image_tag=sorting-${{ github.run_number }}" >> $GITHUB_ENV
-
-    # Build the Docker image
-    - name: Build the Docker image
+    # Build Docker image
+    - name: Build Docker image
       run: |
         IMAGE_TAG=sorting-${{ github.run_number }}
         docker build . --file Dockerfile --tag $IMAGE_TAG
 
-    # Tag the Docker image with the Docker Hub repository and push it to Docker Hub
-    - name: Tag and Push Docker image to Docker Hub
+    # Tag and push image
+    - name: Tag and Push Docker image
       run: |
         IMAGE_TAG=sorting-${{ github.run_number }}
         docker tag $IMAGE_TAG ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
 
+    # ✅ FIXED Trivy (SECURE VERSION)
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.24.0
+      uses: aquasecurity/trivy-action@0.35.0
       with:
         image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest'
         format: 'table'
-        exit-code: '0'
+        exit-code: '0'   # change to '1' if you want to fail pipeline
         ignore-unfixed: true
         vuln-type: 'os,library'
-        severity: 'HIGH,CRITICAL'    
-    # # Run Trivy scan
-    # - name: Run Trivy scan
-    #   run: |
-    #     trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest
+        severity: 'HIGH,CRITICAL'
 
-    # Start the SSH agent and add the SSH private key
+    # Setup SSH agent
     - name: Start SSH Agent
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    # SSH into Swarm Manager and Deploy the service on Docker Swarm
+    # Deploy to Docker Swarm
     - name: Deploy Docker service on Swarm Manager
       run: |
-        echo "Deploying Docker service on Swarm Manager..."
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
         "sudo docker service update --image ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest my-service || \
          sudo docker service create --name my-service --replicas 3 -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/sorting-${{ github.run_number }}:latest"
-        echo "You can access the cluster at http://<your-cluster-url>:3000"
 
-    # Verify that the service is running after deployment
+    # Verify service
     - name: Verify Docker service status
       run: |
-        echo "Checking the status of the Docker service..."
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SWARM_MANAGER_IP }} \
         "sudo docker service ls"
-
